@@ -1,0 +1,22 @@
+{
+  "name": "kiot-lms-nextgen",
+  "version": "2.0.0",
+  "description": "Next-Generation Academic Learning Management System for Knowledge Institute of Technology (Autonomous), inspired by kiotlms.com/my/courses.php",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "lms",
+    "kiot",
+    "moodle",
+    "courses",
+    "autonomous",
+    "anna-university",
+    "education"
+  ],
+  "author": "KIOT LMS Engineering",
+  "license": "MIT"
+}

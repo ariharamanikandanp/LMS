@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en" class="font-md">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Courses | KIOT LMS - Knowledge Institute of Technology (Autonomous)</title>
+  <link rel="shortcut icon" href="assets/kiot_favicon.png" type="image/png">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            kiot: {
+              navy: '#0c2340',
+              'navy-light': '#163660',
+              'navy-dark': '#071526',
+              blue: '#1e40af',
+              'blue-light': '#3b82f6',
+              gold: '#f59e0b',
+              'gold-dark': '#d97706',
+              'gold-light': '#fef3c7'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome 6 Icons (matching Moodle Moove style) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Chart.js for Attendance & Grade Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+
+  <!-- ================= TOP NAVIGATION BAR (MOOVE STYLE) ================= -->
+  <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm transition-colors duration-200">
+    <div class="px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Left: Mobile Menu Toggle & Brand Logo -->
+      <div class="flex items-center gap-3">
+        <button id="sidebarToggleBtn" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none" aria-label="Toggle Navigation Drawer">
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+
+        <a href="#" class="flex items-center gap-3 group">
+          <img src="assets/kiot_logo.png" alt="KIOT LMS Logo" class="h-10 sm:h-11 object-contain transition-transform group-hover:scale-105" onerror="this.onerror=null; this.src='https://kiotlms.com/pluginfile.php/1/theme_moove/logo/1791211168/KIOT_Logo.png';">
+          <div class="hidden sm:flex flex-col border-l border-slate-200 dark:border-slate-700 pl-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-kiot-gold-dark dark:text-kiot-gold">Autonomous Portal</span>
+            <span class="text-sm font-extrabold text-kiot-navy dark:text-blue-400 tracking-tight leading-none">KIOT LMS</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center: Campus Selector & Global Search Bar -->
+      <div class="hidden md:flex items-center flex-1 max-w-md mx-4">
+        <div class="relative w-full">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input 
+            type="text" 
+            id="globalSearchInput" 
+            placeholder="Search courses, syllabus topics, code (e.g. 21CS501), faculty..." 
+            class="w-full pl-10 pr-4 py-2 text-sm bg-slate-100 dark:bg-slate-800 border border-transparent rounded-full focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:outline-none transition-all dark:text-slate-200 placeholder-slate-400"
+          >
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-slate-400 bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded">Ctrl+K</span>
+        </div>
+      </div>
+
+      <!-- Right: Accessibility Toolbar, Notifications, User Persona -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        
+        <!-- Accessibility Font Sizer -->
+        <div class="hidden lg:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-0.5 text-xs text-slate-600 dark:text-slate-300 font-semibold" title="Font Size Controls">
+          <button id="fontSmBtn" class="px-2 py-1 hover:text-blue-600 dark:hover:text-blue-400" title="Small Text">A-</button>
+          <button id="fontMdBtn" class="px-2 py-1 bg-white dark:bg-slate-700 rounded shadow-xs text-blue-600 dark:text-blue-400" title="Default Text">A</button>
+          <button id="fontLgBtn" class="px-2 py-1 hover:text-blue-600 dark:hover:text-blue-400" title="Large Text">A+</button>
+        </div>
+
+        <!-- Dark / Light Mode Toggle -->
+        <button id="themeToggleBtn" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Toggle Dark/Light Mode">
+          <i class="fa-solid fa-moon dark:hidden text-slate-600"></i>
+          <i class="fa-solid fa-sun hidden dark:inline-block text-amber-400"></i>
+        </button>
+
+        <!-- High Contrast Mode Toggle -->
+        <button id="contrastToggleBtn" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="High Contrast Mode">
+          <i class="fa-solid fa-circle-half-stroke"></i>
+        </button>
+
+        <!-- Notification Bell with Dropdown -->
+        <div class="relative">
+          <button id="notificationBtn" class="relative p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <i class="fa-solid fa-bell text-lg"></i>
+            <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white dark:ring-slate-900"></span>
+          </button>
+          
+          <!-- Dropdown Menu -->
+          <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 z-50 overflow-hidden">
+            <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <span class="font-bold text-sm text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                <i class="fa-solid fa-bullhorn text-kiot-gold-dark"></i> Important Circulars & Alerts
+              </span>
+              <span class="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 px-2 py-0.5 rounded-full font-medium">3 New</span>
+            </div>
+            <div id="notificationList" class="divide-y divide-slate-100 dark:divide-slate-800 max-h-80 overflow-y-auto">
+              <!-- Rendered via JS -->
+            </div>
+            <div class="p-2 bg-slate-50 dark:bg-slate-800/50 text-center border-t border-slate-200 dark:border-slate-800">
+              <button onclick="switchView('announcements')" class="text-xs text-blue-600 dark:text-blue-400 font-semibold hover:underline">View All College Notices</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Direct Trigger Button -->
+        <button onclick="switchView('profile')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50 dark:hover:bg-blue-900/30 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition shadow-2xs" title="View Full Student Profile">
+          <i class="fa-solid fa-id-badge text-blue-600 dark:text-blue-400"></i>
+          <span>Profile</span>
+        </button>
+
+        <!-- User Profile Dropdown -->
+        <div class="relative">
+          <button id="userProfileBtn" class="flex items-center gap-2 p-1 pl-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <div class="text-right hidden xl:block">
+              <div id="headerUserName" class="text-xs font-bold leading-tight text-slate-800 dark:text-slate-200">Arihant S</div>
+              <div id="headerUserSub" class="text-[10px] text-slate-500 dark:text-slate-400">611221104042 (CSE)</div>
+            </div>
+            <img id="headerUserAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150" alt="User Profile Avatar" class="w-8 h-8 rounded-full object-cover ring-2 ring-blue-600/30">
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 mr-1"></i>
+          </button>
+
+          <!-- User Menu Dropdown -->
+          <div id="userDropdownMenu" class="hidden absolute right-0 mt-2 w-64 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 z-50 overflow-hidden">
+            <div class="p-4 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-100 dark:border-slate-800">
+              <div id="dropdownUserName" class="text-xs font-bold text-slate-900 dark:text-slate-100">Arihant S</div>
+              <div id="dropdownUserRole" class="text-[11px] text-blue-600 dark:text-blue-400 font-semibold mt-0.5">Student • III Year B.E. CSE</div>
+              <div class="text-[10px] text-slate-400 mt-1">Autonomous Regulations 2021</div>
+            </div>
+
+            <div class="p-2 space-y-1 text-xs">
+              <button onclick="switchView('profile'); toggleUserDropdown();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 text-left font-semibold">
+                <i class="fa-solid fa-id-card text-blue-600 w-4 text-center"></i>
+                <span>My Profile & ID Card</span>
+              </button>
+              <button onclick="switchView('courses'); toggleUserDropdown();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 text-left">
+                <i class="fa-solid fa-graduation-cap text-blue-600 w-4 text-center"></i>
+                <span>Enrolled Courses</span>
+              </button>
+              <button onclick="switchView('cia'); toggleUserDropdown();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 text-left">
+                <i class="fa-solid fa-award text-amber-500 w-4 text-center"></i>
+                <span>My Grades & Transcripts</span>
+              </button>
+              <button onclick="openHallTicketModal(); toggleUserDropdown();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 text-left">
+                <i class="fa-solid fa-ticket text-rose-500 w-4 text-center"></i>
+                <span>End-Sem Hall Ticket</span>
+              </button>
+            </div>
+
+            <div class="p-2 border-t border-slate-100 dark:border-slate-800">
+              <button onclick="handleLogout()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 text-xs font-bold text-left transition">
+                <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i>
+                <span>Log Out of KIOT LMS</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= MAIN LAYOUT WITH SIDEBAR & CONTENT ================= -->
+  <div class="flex-1 flex overflow-hidden">
+    
+    <!-- Left Navigation Sidebar / Drawer (Moodle Moove Navigation) -->
+    <aside id="mainSidebar" class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0 transition-all duration-300 z-30 fixed lg:static inset-y-0 left-0 -translate-x-full lg:translate-x-0">
+      
+      <!-- College Tag & Department Pill -->
+      <div class="p-4 border-b border-slate-100 dark:border-slate-800/70">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Autonomous R-2021 CBCS</span>
+        </div>
+        <div id="sidebarUserDept" class="text-sm font-bold text-slate-800 dark:text-slate-100 mt-0.5 truncate">
+          B.E. Computer Science & Engg
+        </div>
+        <div class="text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between mt-1">
+          <span>Year III • Semester V</span>
+          <span class="bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-1.5 py-0.2 rounded font-mono font-medium">Sec B</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="flex-1 overflow-y-auto p-3 space-y-1">
+        
+        <button onclick="switchView('courses')" id="nav-courses" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition nav-item-active">
+          <i class="fa-solid fa-graduation-cap text-base text-blue-600 dark:text-blue-400 w-5 text-center"></i>
+          <span>My Courses</span>
+          <span class="ml-auto text-xs bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold px-2 py-0.5 rounded-full">8</span>
+        </button>
+
+        <button onclick="switchView('profile')" id="nav-profile" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <i class="fa-solid fa-id-card text-base text-blue-600 dark:text-blue-400 w-5 text-center"></i>
+          <span>Student Profile</span>
+          <span class="ml-auto text-[10px] bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-bold px-1.5 py-0.5 rounded">611221104042</span>
+        </button>
+
+        <button onclick="switchView('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <i class="fa-regular fa-calendar-days text-base text-amber-500 w-5 text-center"></i>
+          <span>Today's Timetable</span>
+          <span class="ml-auto text-[10px] bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 font-semibold px-1.5 py-0.5 rounded">Live</span>
+        </button>
+
+        <button onclick="switchView('cia')" id="nav-cia" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <i class="fa-solid fa-chart-line text-base text-purple-500 w-5 text-center"></i>
+          <span>Internal Marks (CIA)</span>
+          <span class="ml-auto text-xs font-mono font-bold text-slate-500">44.5/50</span>
+        </button>
+
+        <button onclick="switchView('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <i class="fa-solid fa-user-check text-base text-emerald-500 w-5 text-center"></i>
+          <span>Attendance & OD</span>
+          <span class="ml-auto text-xs font-bold text-emerald-600 dark:text-emerald-400">89.6%</span>
+        </button>
+
+        <button onclick="openHallTicketModal()" id="nav-hallticket" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <i class="fa-solid fa-ticket text-base text-rose-500 w-5 text-center"></i>
+          <span>Hall Ticket & Exams</span>
+          <span class="ml-auto text-[10px] bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 font-semibold px-1.5 py-0.5 rounded">Nov 28</span>
+        </button>
+
+        <button onclick="switchView('placement')" id="nav-placement" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <i class="fa-solid fa-briefcase text-base text-amber-600 w-5 text-center"></i>
+          <span>Placement & Zoho Track</span>
+          <span class="ml-auto text-[10px] bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 font-bold px-1.5 py-0.5 rounded">910+ Offers</span>
+        </button>
+
+        <button onclick="switchView('library')" id="nav-library" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <i class="fa-solid fa-book-bookmark text-base text-teal-500 w-5 text-center"></i>
+          <span>Digital Library (IEEE/DELNET)</span>
+        </button>
+
+        <button onclick="switchView('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <i class="fa-solid fa-bullhorn text-base text-indigo-500 w-5 text-center"></i>
+          <span>KIOT Circulars & News</span>
+        </button>
+
+        <!-- Divider -->
+        <div class="pt-2 pb-1">
+          <div class="h-px bg-slate-200 dark:bg-slate-800"></div>
+        </div>
+
+        <!-- AI Assistant Direct Trigger -->
+        <button onclick="openAITutorModal('general')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-blue-600/10 to-indigo-600/10 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900 hover:from-blue-600/20 hover:to-indigo-600/20 transition">
+          <i class="fa-solid fa-wand-magic-sparkles text-blue-600 dark:text-blue-400 w-5 text-center"></i>
+          <span>KIOT AI Study Companion</span>
+          <span class="ml-auto text-[10px] bg-blue-600 text-white font-bold px-1.5 py-0.5 rounded">AI</span>
+        </button>
+
+      </nav>
+
+      <!-- Sidebar Footer (Accreditation & Helpline) -->
+      <div class="p-4 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/40 text-[11px] text-slate-500 dark:text-slate-400 space-y-1">
+        <div class="flex items-center justify-between font-semibold text-slate-700 dark:text-slate-300">
+          <span>AICTE IDEA Lab Approved</span>
+          <span class="text-emerald-600 font-bold">NAAC 'A'</span>
+        </div>
+        <p class="text-[10px] text-slate-400">NH544, Kakapalayam, Salem</p>
+        <div class="pt-1 flex items-center justify-between text-[10px]">
+          <a href="https://kiotlms.com" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">Official Moodle</a>
+          <span>v4.3 Moove</span>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Sidebar Backdrop for Mobile -->
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-900/50 z-20 backdrop-blur-xs hidden lg:hidden"></div>
+
+    <!-- Main Scrollable Content Area -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+      
+      <!-- ================= SECTION 1: MY COURSES VIEW (/my/courses.php) ================= -->
+      <div id="view-courses" class="space-y-6">
+        
+        <!-- Breadcrumb & Page Title Strip -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <nav class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-1">
+              <a href="#" class="hover:text-blue-600">Home</a>
+              <i class="fa-solid fa-chevron-right text-[10px]"></i>
+              <a href="#" class="hover:text-blue-600">Dashboard</a>
+              <i class="fa-solid fa-chevron-right text-[10px]"></i>
+              <span class="text-slate-800 dark:text-slate-200 font-semibold">My courses</span>
+            </nav>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+              <span>My Courses</span>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">Semester V • CBCS</span>
+            </h1>
+          </div>
+
+          <!-- Quick Quick Action Buttons -->
+          <div class="flex items-center gap-2">
+            <button onclick="openHallTicketModal()" class="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-xs transition">
+              <i class="fa-solid fa-ticket text-rose-500"></i>
+              <span>Download Hall Ticket</span>
+            </button>
+            <button onclick="openAITutorModal('exam_strategy')" class="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-sm transition">
+              <i class="fa-solid fa-sparkles"></i>
+              <span>Exam Prep AI</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Academic Performance Strip (KPIs) -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          
+          <!-- KPI 1: Enrolled Courses & Credits -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+              <span class="text-xs font-bold uppercase tracking-wider">Registered Courses</span>
+              <div class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                <i class="fa-solid fa-book-open text-sm"></i>
+              </div>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">8</span>
+              <span class="text-xs text-slate-500 font-semibold">Subjects</span>
+            </div>
+            <div class="text-xs text-blue-600 dark:text-blue-400 font-medium mt-1">22 Total Credits this Sem</div>
+          </div>
+
+          <!-- KPI 2: Overall Attendance -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+              <span class="text-xs font-bold uppercase tracking-wider">Overall Attendance</span>
+              <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                <i class="fa-solid fa-user-check text-sm"></i>
+              </div>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">89.6%</span>
+              <span class="text-[11px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded font-bold">Safe</span>
+            </div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">240 / 268 Classes Attended</div>
+          </div>
+
+          <!-- KPI 3: Current Cumulative GPA -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+              <span class="text-xs font-bold uppercase tracking-wider">Academic CGPA</span>
+              <div class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                <i class="fa-solid fa-award text-sm"></i>
+              </div>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">8.74</span>
+              <span class="text-xs text-slate-500 font-semibold">/ 10.0</span>
+            </div>
+            <div class="text-xs text-amber-600 dark:text-amber-400 font-medium mt-1">First Class with Distinction</div>
+          </div>
+
+          <!-- KPI 4: Continuous Internal Marks (CIA) -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+              <span class="text-xs font-bold uppercase tracking-wider">Internal Marks Avg</span>
+              <div class="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                <i class="fa-solid fa-file-pen text-sm"></i>
+              </div>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">44.5</span>
+              <span class="text-xs text-slate-500 font-semibold">/ 50.0</span>
+            </div>
+            <div class="text-xs text-purple-600 dark:text-purple-400 font-medium mt-1">CIA-1 & Model Averaged</div>
+          </div>
+
+        </div>
+
+        <!-- ================= COURSE OVERVIEW & FILTER CONTROLS ================= -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
+          
+          <!-- Top Row: Course Status Tabs & View Switcher -->
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+            
+            <!-- Filter Tabs (Matching Moodle Moove Course Filters) -->
+            <div class="flex items-center gap-1 overflow-x-auto no-scrollbar">
+              <button onclick="filterCoursesByStatus('all')" id="tab-all" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 transition">
+                All Courses (8)
+              </button>
+              <button onclick="filterCoursesByStatus('in-progress')" id="tab-in-progress" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                In Progress (6)
+              </button>
+              <button onclick="filterCoursesByStatus('completed')" id="tab-completed" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                Past Semesters (4)
+              </button>
+              <button onclick="filterCoursesByStatus('starred')" id="tab-starred" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-star text-amber-400 text-[10px]"></i> Starred (4)
+              </button>
+            </div>
+
+            <!-- View Switcher (Grid vs List) -->
+            <div class="flex items-center gap-1 self-end md:self-auto bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
+              <button id="viewGridBtn" onclick="setCourseDisplayMode('grid')" class="p-1.5 rounded bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs" title="Grid View">
+                <i class="fa-solid fa-grip text-xs"></i>
+              </button>
+              <button id="viewListBtn" onclick="setCourseDisplayMode('list')" class="p-1.5 rounded text-slate-500 hover:text-slate-900 dark:hover:text-slate-200" title="List View">
+                <i class="fa-solid fa-list-ul text-xs"></i>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Second Row: Department Filter, Sort By, Search Input -->
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+            
+            <!-- Search courses input -->
+            <div class="sm:col-span-5 relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input 
+                type="text" 
+                id="courseSearchInput" 
+                oninput="handleCourseSearch(this.value)" 
+                placeholder="Filter by course name, code, or professor..." 
+                class="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:outline-none transition dark:text-slate-200"
+              >
+            </div>
+
+            <!-- Category / Type Dropdown -->
+            <div class="sm:col-span-4">
+              <select id="categorySelect" onchange="handleCategoryFilter(this.value)" class="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none dark:text-slate-200">
+                <option value="all">All Subject Categories</option>
+                <option value="Professional Core">Professional Core (Theory)</option>
+                <option value="Laboratory Course">Practical / Laboratories</option>
+                <option value="Career & Placement">Placement & Aptitude</option>
+                <option value="Open Elective">Open Electives</option>
+              </select>
+            </div>
+
+            <!-- Sort By Dropdown -->
+            <div class="sm:col-span-3">
+              <select id="sortSelect" onchange="handleCourseSort(this.value)" class="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none dark:text-slate-200">
+                <option value="code">Sort by: Course Code</option>
+                <option value="title">Sort by: Course Title</option>
+                <option value="progress">Sort by: Completion %</option>
+                <option value="attendance">Sort by: Attendance %</option>
+              </select>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ================= COURSES CONTAINER (GRID / LIST) ================= -->
+        <div id="coursesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Populated dynamically via app.js -->
+        </div>
+
+        <!-- Zero results state -->
+        <div id="noCoursesState" class="hidden text-center py-16 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
+          <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+            <i class="fa-solid fa-magnifying-glass text-xl"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-800 dark:text-slate-200">No courses match your criteria</h3>
+          <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1">Try resetting your search query or switching the category filter.</p>
+          <button onclick="resetFilters()" class="mt-4 px-4 py-2 text-xs font-semibold bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">Reset Filters</button>
+        </div>
+
+      </div>
+
+      <!-- ================= SECTION 2: TIMETABLE VIEW ================= -->
+      <div id="view-timetable" class="hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Day Order Schedule & Timetable</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">B.E. CSE - Year III (Section B) • Room CS-304 & ICT Labs</p>
+          </div>
+          <span class="text-xs bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold px-3 py-1 rounded-full">Day Order: 3 (Wednesday)</span>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 uppercase font-bold border-b border-slate-200 dark:border-slate-800">
+                <tr>
+                  <th class="p-3.5">Period</th>
+                  <th class="p-3.5">Time Interval</th>
+                  <th class="p-3.5">Course Code & Name</th>
+                  <th class="p-3.5">Classroom / Lab</th>
+                  <th class="p-3.5">Faculty In-charge</th>
+                  <th class="p-3.5">Live Status</th>
+                </tr>
+              </thead>
+              <tbody id="timetableTableBody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SECTION 3: CIA & INTERNAL MARKS VIEW ================= -->
+      <div id="view-cia" class="hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Continuous Internal Assessment (CIA)</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Autonomous Internal Mark Weightage: CIA-1 (15) + CIA-2 (15) + Model (10) + Assignments (5) + Att (5) = 50 Marks</p>
+          </div>
+          <button onclick="window.print()" class="px-3 py-1.5 text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 transition">
+            <i class="fa-solid fa-print mr-1"></i> Print Grade Sheet
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-xs">
+            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4">Subject-wise CIA Marks Breakdown</h3>
+            <div id="ciaSubjectList" class="space-y-4">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-xs space-y-4">
+            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200">Internal Marks Distribution</h3>
+            <canvas id="ciaChart" class="w-full max-h-56"></canvas>
+            <div class="p-3.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 text-xs text-blue-800 dark:text-blue-300 space-y-1">
+              <div class="font-bold">Projected University Internal: 44.5 / 50</div>
+              <p>With consistent performance in End-Sem, you are on track for an O (Outstanding) grade in 5 subjects!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SECTION 4: ATTENDANCE & OD PORTAL VIEW ================= -->
+      <div id="view-attendance" class="hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Attendance Analytics & OD Portal</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Anna University & KIOT Autonomous Mandate: Minimum 75% required to sit for End-Semester Examinations</p>
+          </div>
+          <button onclick="openODRequestModal()" class="px-3.5 py-2 text-xs font-bold bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-sm transition">
+            <i class="fa-solid fa-file-signature mr-1.5"></i> Apply for On-Duty (OD)
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="attendanceGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Attendance Calculator Box -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-xs">
+          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-calculator text-blue-600"></i> Smart Attendance Buffer Calculator
+          </h3>
+          <p class="text-xs text-slate-500 mb-4">Calculate how many future classes you can safely miss or must attend to maintain 75% / 85% eligibility.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+              <div class="text-xs text-slate-500 font-semibold">Maximum Classes You Can Miss</div>
+              <div class="text-2xl font-black text-emerald-600 mt-1">16 Classes</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">While staying strictly above 75%</div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+              <div class="text-xs text-slate-500 font-semibold">Classes Needed for 95% Honor Roll</div>
+              <div class="text-2xl font-black text-blue-600 mt-1">28 Classes</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Eligible for Dean's Academic List</div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+              <div class="text-xs text-slate-500 font-semibold">Approved OD Hours Credited</div>
+              <div class="text-2xl font-black text-purple-600 mt-1">14 Hours</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Symposium & Hackathons</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SECTION 5: PLACEMENT & ZOHO TRACK VIEW ================= -->
+      <div id="view-placement" class="hidden space-y-6">
+        <div class="p-6 rounded-2xl bg-gradient-to-r from-kiot-navy to-blue-900 text-white relative overflow-hidden">
+          <div class="relative z-10 max-w-2xl space-y-2">
+            <span class="text-xs font-bold tracking-widest uppercase bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-full border border-amber-500/30">KIOT Training & Placement Cell</span>
+            <h2 class="text-2xl sm:text-3xl font-black tracking-tight">Shaping 910+ Future-Ready Engineers</h2>
+            <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+              Knowledge Institute of Technology is trusted by leading tech giants like Zoho Corporation, TCS, Tech Mahindra, Cognizant, and Virtusa. Access dedicated coding modules and round-wise interview tracks directly through your LMS.
+            </p>
+          </div>
+          <img src="assets/placementicon.jpg" alt="Placement Banner Icon" class="absolute right-4 bottom-2 h-36 opacity-30 object-contain hidden sm:block">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="placementCompaniesList">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- ================= SECTION 6: DIGITAL LIBRARY & QUESTION BANK ================= -->
+      <div id="view-library" class="hidden space-y-6">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">KIOT Central Digital Library & E-Consortium</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Institutional subscriptions to international journals, e-books, and autonomous past question papers.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="libraryResourcesList">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- ================= SECTION 7: ANNOUNCEMENTS & CIRCULARS ================= -->
+      <div id="view-announcements" class="hidden space-y-6">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Official Notices & Circulars</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Controller of Examinations, Principal, and HOD circulars for 2024-2025.</p>
+        </div>
+
+        <div id="allAnnouncementsList" class="space-y-4">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- ================= SECTION 8: STUDENT PROFILE & ID CARD VIEW ================= -->
+      <div id="view-profile" class="hidden space-y-6">
+        
+        <!-- Profile Header Banner -->
+        <div class="relative bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+          
+          <!-- Banner Graphic -->
+          <div class="h-36 sm:h-44 bg-gradient-to-r from-kiot-navy via-kiot-blue to-indigo-900 relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-400/20 via-transparent to-transparent"></div>
+            <div class="absolute right-6 top-6 flex items-center gap-2">
+              <span class="px-3 py-1 rounded-full text-xs font-bold bg-white/20 backdrop-blur-md text-white border border-white/20">
+                Autonomous R-2021 CBCS
+              </span>
+              <button onclick="window.print()" class="px-3 py-1 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition flex items-center gap-1.5 border border-white/20">
+                <i class="fa-solid fa-print"></i>
+                <span>Print Profile</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Profile Details Bar -->
+          <div class="px-6 pb-6 pt-0 sm:flex sm:items-end sm:justify-between relative">
+            <div class="sm:flex sm:items-end gap-5 -mt-16 sm:-mt-20">
+              <div class="relative inline-block">
+                <img 
+                  id="profilePageAvatar" 
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250" 
+                  alt="Student Photograph" 
+                  class="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl object-cover ring-4 ring-white dark:ring-slate-900 shadow-lg bg-white"
+                >
+                <span class="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900 flex items-center justify-center text-[10px] text-white" title="Verified Regular Student">
+                  <i class="fa-solid fa-check"></i>
+                </span>
+              </div>
+
+              <div class="mt-4 sm:mt-0 space-y-1">
+                <div class="flex items-center gap-2.5">
+                  <h2 id="profilePageName" class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Arihant S</h2>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">
+                    B.E. CSE
+                  </span>
+                </div>
+                <p id="profilePageDept" class="text-xs text-slate-600 dark:text-slate-300 font-semibold">
+                  Department of Computer Science and Engineering • Year III (Section B)
+                </p>
+                <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 font-mono">
+                  <span>Register No: <strong id="profilePageRegNo" class="text-slate-800 dark:text-slate-200">611221104042</strong></span>
+                  <span>•</span>
+                  <span>Roll No: <strong class="text-slate-800 dark:text-slate-200">22CSR042</strong></span>
+                  <span>•</span>
+                  <span>Batch: <strong class="text-slate-800 dark:text-slate-200">2022 - 2026</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mentor Quick Badge -->
+            <div class="mt-4 sm:mt-0 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 text-xs">
+              <div class="text-[10px] text-slate-400 uppercase font-bold">Faculty Mentor & Advisor</div>
+              <div class="font-bold text-slate-800 dark:text-slate-200 mt-0.5">Dr. P. Rajasekaran</div>
+              <div class="text-[11px] text-blue-600 dark:text-blue-400">Professor & HOD (Cabin 204)</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Academic Performance Strip (KPIs) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs text-center">
+            <div class="text-[10px] text-slate-400 uppercase font-bold">Cumulative CGPA</div>
+            <div class="text-2xl font-black text-amber-500 font-mono mt-1">8.74</div>
+            <div class="text-[11px] text-emerald-600 font-semibold">Distinction Track</div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs text-center">
+            <div class="text-[10px] text-slate-400 uppercase font-bold">Credits Completed</div>
+            <div class="text-2xl font-black text-blue-600 dark:text-blue-400 font-mono mt-1">114 / 165</div>
+            <div class="text-[11px] text-slate-500 font-semibold">69% Degree Progress</div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs text-center">
+            <div class="text-[10px] text-slate-400 uppercase font-bold">Overall Attendance</div>
+            <div class="text-2xl font-black text-emerald-600 font-mono mt-1">89.6%</div>
+            <div class="text-[11px] text-emerald-600 font-semibold">240 / 268 Hours</div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs text-center">
+            <div class="text-[10px] text-slate-400 uppercase font-bold">Standing Arrears</div>
+            <div class="text-2xl font-black text-slate-800 dark:text-slate-100 font-mono mt-1">0</div>
+            <div class="text-[11px] text-emerald-600 font-semibold">All Clear (First Attempt)</div>
+          </div>
+        </div>
+
+        <!-- Two Column Layout: Student Details & Digital ID Card -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- Left Column (8 cols): Academic History & Personal Info -->
+          <div class="lg:col-span-7 space-y-6">
+            
+            <!-- Academic History & Semester GPAs -->
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-blue-600"></i>
+                <span>Semester-wise GPA & Autonomous Credits</span>
+              </h3>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-slate-50 dark:bg-slate-800/60 text-slate-500 font-bold uppercase border-b border-slate-200 dark:border-slate-800">
+                    <tr>
+                      <th class="p-3">Semester</th>
+                      <th class="p-3">Credits</th>
+                      <th class="p-3">SGPA</th>
+                      <th class="p-3">Result / Classification</th>
+                    </tr>
+                  </thead>
+                  <tbody id="profileSemTableBody" class="divide-y divide-slate-100 dark:divide-slate-800 font-mono">
+                    <tr>
+                      <td class="p-3 font-semibold text-slate-800 dark:text-slate-200">Semester I</td>
+                      <td class="p-3 text-slate-500">22</td>
+                      <td class="p-3 font-bold text-blue-600">8.64</td>
+                      <td class="p-3 text-emerald-600 font-sans font-semibold">All Clear (Distinction)</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-semibold text-slate-800 dark:text-slate-200">Semester II</td>
+                      <td class="p-3 text-slate-500">24</td>
+                      <td class="p-3 font-bold text-blue-600">8.82</td>
+                      <td class="p-3 text-emerald-600 font-sans font-semibold">All Clear (Distinction)</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-semibold text-slate-800 dark:text-slate-200">Semester III</td>
+                      <td class="p-3 text-slate-500">23</td>
+                      <td class="p-3 font-bold text-blue-600">8.70</td>
+                      <td class="p-3 text-emerald-600 font-sans font-semibold">All Clear (Distinction)</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-semibold text-slate-800 dark:text-slate-200">Semester IV</td>
+                      <td class="p-3 text-slate-500">23</td>
+                      <td class="p-3 font-bold text-blue-600">8.80</td>
+                      <td class="p-3 text-emerald-600 font-sans font-semibold">All Clear (Distinction)</td>
+                    </tr>
+                    <tr class="bg-blue-50/50 dark:bg-blue-900/10 font-bold">
+                      <td class="p-3 text-blue-700 dark:text-blue-300">Semester V (Current)</td>
+                      <td class="p-3 text-slate-500">22</td>
+                      <td class="p-3 font-black text-amber-500">9.10 (Proj)</td>
+                      <td class="p-3 text-blue-600 font-sans">Active In-Progress</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Personal & Contact Information -->
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-address-card text-emerald-600"></i>
+                <span>Personal & Institutional Particulars</span>
+              </h3>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div>
+                  <span class="text-slate-400 block font-medium">Campus Email (Official):</span>
+                  <span class="font-semibold text-slate-800 dark:text-slate-200">arihant.s.cse@kiot.ac.in</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-medium">Personal Email:</span>
+                  <span class="font-semibold text-slate-800 dark:text-slate-200">arihant.official@gmail.com</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-medium">Contact Phone:</span>
+                  <span class="font-semibold font-mono text-slate-800 dark:text-slate-200">+91 98765 43210</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-medium">Date of Birth & Blood Group:</span>
+                  <span class="font-semibold text-slate-800 dark:text-slate-200">14-Aug-2004 • O +ve</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-medium">Father / Guardian:</span>
+                  <span class="font-semibold text-slate-800 dark:text-slate-200">S. Senthil Kumar</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-medium">Transport / Bus Route:</span>
+                  <span class="font-semibold text-slate-800 dark:text-slate-200">Route 14 (Bus Pass: BP-2024-CSE-042)</span>
+                </div>
+                <div class="sm:col-span-2">
+                  <span class="text-slate-400 block font-medium">Permanent Address:</span>
+                  <span class="font-semibold text-slate-800 dark:text-slate-200">42, Gandhi Road, Hasthampatti, Salem - 636 007, Tamil Nadu</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Placement & Skill Badges -->
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-briefcase text-amber-500"></i>
+                <span>Placement Readiness & Professional Credentials</span>
+              </h3>
+
+              <div class="flex flex-wrap gap-2 text-xs">
+                <span class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 font-semibold text-slate-700 dark:text-slate-300">
+                  ⚡ C++ & Data Structures
+                </span>
+                <span class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 font-semibold text-slate-700 dark:text-slate-300">
+                  ⚡ Java & OOP
+                </span>
+                <span class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 font-semibold text-slate-700 dark:text-slate-300">
+                  ⚡ Python & Machine Learning
+                </span>
+                <span class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 font-semibold text-slate-700 dark:text-slate-300">
+                  ⚡ Cloud SQL & Relational Databases
+                </span>
+                <span class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 font-semibold text-slate-700 dark:text-slate-300">
+                  ⚡ Full Stack Web (React + Node)
+                </span>
+              </div>
+
+              <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50">
+                  <div class="font-bold text-amber-900 dark:text-amber-200">Zoho Corporation Day-1 Campus Track</div>
+                  <span class="font-bold text-emerald-600 bg-white dark:bg-slate-800 px-2 py-0.5 rounded shadow-2xs font-mono">Cleared Round 1 (88%)</span>
+                </div>
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50">
+                  <div class="font-bold text-blue-900 dark:text-blue-200">NPTEL SWAYAM - Cloud Computing (IIT KGP)</div>
+                  <span class="font-bold text-blue-700 dark:text-blue-300 bg-white dark:bg-slate-800 px-2 py-0.5 rounded shadow-2xs">Elite + Gold Medal</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Column (5 cols): Digital Student Identity Card -->
+          <div class="lg:col-span-5 space-y-4">
+            
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-id-card text-rose-500"></i>
+                <span>Digital Student Identity Card</span>
+              </h3>
+              <button onclick="window.print()" class="text-xs text-blue-600 dark:text-blue-400 font-semibold hover:underline">
+                <i class="fa-solid fa-download mr-1"></i> Download ID
+              </button>
+            </div>
+
+            <!-- Student ID Card (Printable Widget) -->
+            <div class="bg-gradient-to-b from-slate-900 to-kiot-navy text-white rounded-3xl p-5 shadow-xl border-2 border-slate-800 relative overflow-hidden">
+              
+              <!-- Card Header -->
+              <div class="text-center border-b border-white/10 pb-3 mb-3">
+                <img src="assets/kiot_logo.png" alt="KIOT Logo" class="h-10 mx-auto object-contain mb-1" onerror="this.src='https://kiotlms.com/pluginfile.php/1/theme_moove/logo/1791211168/KIOT_Logo.png';">
+                <h4 class="text-xs font-black uppercase tracking-wider text-amber-300">Knowledge Institute of Technology</h4>
+                <p class="text-[9px] text-blue-200 uppercase font-semibold">Autonomous • Affiliated to Anna University</p>
+                <p class="text-[9px] text-slate-400">Kakapalayam, Salem - 637 504</p>
+              </div>
+
+              <!-- Student Photo and Primary Meta -->
+              <div class="flex items-center gap-4 mb-4">
+                <div class="relative shrink-0">
+                  <img 
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" 
+                    alt="Arihant S" 
+                    class="w-20 h-24 rounded-xl object-cover border-2 border-white/20 shadow-md"
+                  >
+                </div>
+
+                <div class="space-y-1 text-xs">
+                  <h5 class="text-sm font-black text-white uppercase">Arihant S</h5>
+                  <div class="text-[11px] font-bold text-amber-300">B.E. CSE</div>
+                  <div class="text-[10px] font-mono text-blue-200">Reg: 611221104042</div>
+                  <div class="text-[10px] font-mono text-slate-300">Roll: 22CSR042</div>
+                  <div class="text-[9px] bg-white/10 px-2 py-0.5 rounded text-slate-200 inline-block font-semibold">
+                    Valid: 2022 - 2026
+                  </div>
+                </div>
+              </div>
+
+              <!-- Specific ID Fields -->
+              <div class="grid grid-cols-2 gap-2 text-[10px] bg-white/5 p-3 rounded-xl border border-white/10 mb-4">
+                <div>
+                  <span class="text-slate-400 block">Blood Group:</span>
+                  <span class="font-bold text-white">O +ve</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block">DOB:</span>
+                  <span class="font-bold text-white">14-08-2004</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block">Emergency Contact:</span>
+                  <span class="font-bold font-mono text-white">+91 98765 43210</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block">Student Status:</span>
+                  <span class="font-bold text-emerald-400">Day Scholar</span>
+                </div>
+              </div>
+
+              <!-- Barcode & Signatures -->
+              <div class="flex items-end justify-between pt-2 border-t border-white/10 text-[9px]">
+                <div>
+                  <div class="font-mono text-blue-200 tracking-widest text-[8px]">
+                    ||| | ||||| || |||| ||| ||||||| |||| |
+                  </div>
+                  <span class="text-slate-400 font-mono">KIOT-ID-611221104042</span>
+                </div>
+                <div class="text-right">
+                  <div class="font-serif italic text-blue-200 font-bold text-xs">Dr. PSS. Srinivasan</div>
+                  <span class="text-slate-400 uppercase font-semibold">Principal</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Quick Links -->
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs space-y-2">
+              <div class="font-bold text-slate-800 dark:text-slate-200">Need Profile Updates?</div>
+              <p class="text-slate-500 text-[11px] leading-relaxed">
+                To update your residential address, bus route, or contact details, submit an administrative request through the Academic Dean's office.
+              </p>
+              <button onclick="showToast('Profile change request initiated. Contact Academic Section.', 'info')" class="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-bold transition text-xs">
+                Request Data Correction
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ================= MODAL: COURSE DEEP-DIVE MODAL ================= -->
+  <div id="courseModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5">
+    <div class="modal-content-container bg-white dark:bg-slate-900 w-full max-w-5xl max-h-[92vh] rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden">
+      
+      <!-- Modal Header with Course Banner -->
+      <div class="relative p-6 bg-gradient-to-r from-blue-700 to-indigo-900 text-white shrink-0">
+        <button onclick="closeCourseModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/20 hover:bg-black/40 text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pr-10">
+          <div>
+            <div class="flex items-center gap-2 mb-1.5">
+              <span id="modalCourseCode" class="text-xs font-mono font-bold bg-white/20 backdrop-blur-xs px-2.5 py-0.5 rounded-full">21CS501</span>
+              <span id="modalCourseCategory" class="text-xs font-semibold bg-amber-400/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-400/30">Professional Core</span>
+              <span id="modalCourseCredits" class="text-xs bg-white/10 px-2 py-0.5 rounded-full">4 Credits (3-1-0-4)</span>
+            </div>
+            <h2 id="modalCourseTitle" class="text-xl sm:text-2xl font-black tracking-tight">Theory of Computation & Compiler Design</h2>
+            <div class="flex items-center gap-2 mt-2 text-xs text-blue-100">
+              <span id="modalFacultyName">Dr. P. Rajasekaran, Professor & HOD</span>
+              <span>•</span>
+              <span id="modalFacultyEmail" class="hover:underline">rajasekaran.cse@kiot.ac.in</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10">
+            <div class="text-center">
+              <div class="text-[10px] text-blue-200 uppercase font-bold">Attendance</div>
+              <div id="modalAttendancePct" class="text-lg font-black text-emerald-300">92.1%</div>
+            </div>
+            <div class="w-px h-8 bg-white/20"></div>
+            <div class="text-center">
+              <div class="text-[10px] text-blue-200 uppercase font-bold">CIA Score</div>
+              <div id="modalCiaScore" class="text-lg font-black text-amber-300">44.5/50</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course Tabs Header -->
+        <div class="flex items-center gap-1 overflow-x-auto no-scrollbar mt-6 -mb-6 border-b border-white/10 pt-2">
+          <button onclick="setModalTab('units')" id="modalTab-units" class="tab-btn px-4 py-2.5 text-xs font-bold text-white border-b-2 border-white transition">
+            <i class="fa-solid fa-list-check mr-1.5"></i> Units & Syllabus (I-V)
+          </button>
+          <button onclick="setModalTab('cia')" id="modalTab-cia" class="tab-btn px-4 py-2.5 text-xs font-semibold text-blue-200 hover:text-white border-b-2 border-transparent transition">
+            <i class="fa-solid fa-chart-pie mr-1.5"></i> CIA Internal Marks
+          </button>
+          <button onclick="setModalTab('assignments')" id="modalTab-assignments" class="tab-btn px-4 py-2.5 text-xs font-semibold text-blue-200 hover:text-white border-b-2 border-transparent transition">
+            <i class="fa-solid fa-file-arrow-up mr-1.5"></i> Assignments & Submissions
+          </button>
+          <button onclick="setModalTab('quiz')" id="modalTab-quiz" class="tab-btn px-4 py-2.5 text-xs font-semibold text-blue-200 hover:text-white border-b-2 border-transparent transition">
+            <i class="fa-solid fa-stopwatch mr-1.5"></i> Online Quiz & Anti-Cheat
+          </button>
+          <button onclick="setModalTab('placement')" id="modalTab-placement" class="tab-btn px-4 py-2.5 text-xs font-semibold text-blue-200 hover:text-white border-b-2 border-transparent transition">
+            <i class="fa-solid fa-building mr-1.5"></i> Zoho & TCS Questions
+          </button>
+          <button onclick="setModalTab('aitutor')" id="modalTab-aitutor" class="tab-btn px-4 py-2.5 text-xs font-semibold text-amber-300 hover:text-white border-b-2 border-transparent transition">
+            <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> KIOT-AI Tutor
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Modal Body (Dynamic Tab Contents) -->
+      <div class="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-slate-900/50 space-y-6" id="modalTabContainer">
+        <!-- Rendered by JS -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL: HALL TICKET GENERATOR (OFFICIAL KIOT) ================= -->
+  <div id="hallTicketModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5">
+    <div class="modal-content-container bg-white dark:bg-slate-900 w-full max-w-4xl max-h-[92vh] rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden">
+      
+      <div class="p-4 bg-slate-100 dark:bg-slate-800 flex items-center justify-between border-b border-slate-200 dark:border-slate-700 no-print">
+        <span class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+          <i class="fa-solid fa-ticket text-rose-500"></i> Autonomous Semester Examination Hall Ticket
+        </span>
+        <div class="flex items-center gap-2">
+          <button onclick="window.print()" class="px-3.5 py-1.5 text-xs font-bold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-print"></i> Print / Save as PDF
+          </button>
+          <button onclick="closeHallTicketModal()" class="w-8 h-8 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-6" id="hallTicketPrintArea">
+        <!-- Official Printable Hall Ticket Content -->
+        <div class="border-2 border-slate-900 p-6 rounded-lg text-slate-900 bg-white">
+          
+          <!-- College Header -->
+          <div class="text-center border-b-2 border-slate-900 pb-4 mb-4">
+            <div class="flex items-center justify-center gap-4 mb-2">
+              <img src="assets/kiot_logo.png" alt="KIOT Logo" class="h-16 object-contain" onerror="this.src='https://kiotlms.com/pluginfile.php/1/theme_moove/logo/1791211168/KIOT_Logo.png';">
+            </div>
+            <h2 class="text-xl font-black uppercase tracking-tight">Knowledge Institute of Technology</h2>
+            <p class="text-xs font-bold uppercase">(An Autonomous Institution, Affiliated to Anna University, Chennai)</p>
+            <p class="text-[11px]">Kakapalayam (PO), Salem - 637 504, Tamil Nadu</p>
+            <h3 class="text-sm font-extrabold uppercase mt-2 bg-slate-900 text-white py-1">Office of the Controller of Examinations — Hall Ticket (Nov / Dec 2024)</h3>
+          </div>
+
+          <!-- Candidate Particulars -->
+          <div class="grid grid-cols-4 gap-4 text-xs mb-4 pb-4 border-b border-slate-300">
+            <div class="col-span-3 space-y-1">
+              <div><span class="font-bold">Register Number:</span> <span class="font-mono font-bold text-sm">611221104042</span></div>
+              <div><span class="font-bold">Candidate Name:</span> <span class="font-bold text-sm uppercase">Arihant S</span></div>
+              <div><span class="font-bold">Degree & Branch:</span> B.E. Computer Science and Engineering (Section B)</div>
+              <div><span class="font-bold">Regulation & Semester:</span> Regulations 2021 (Autonomous) — Semester V</div>
+              <div><span class="font-bold">Examination Center:</span> Main Block Exam Hall A-204, KIOT Campus</div>
+            </div>
+            <div class="col-span-1 flex flex-col items-center justify-center border border-dashed border-slate-400 p-2 text-center">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150" alt="Student Photo" class="w-20 h-24 object-cover border border-slate-300 mb-1">
+              <span class="text-[9px] text-slate-500 font-bold uppercase">Attested Photo</span>
+            </div>
+          </div>
+
+          <!-- Registered Courses Table -->
+          <div class="mb-6">
+            <h4 class="text-xs font-bold uppercase mb-2">Registered Theory Courses & Exam Schedule:</h4>
+            <table class="w-full text-left text-xs border border-slate-900">
+              <thead class="bg-slate-100 border-b border-slate-900 font-bold">
+                <tr>
+                  <th class="p-2 border-r border-slate-900">Date</th>
+                  <th class="p-2 border-r border-slate-900">Session</th>
+                  <th class="p-2 border-r border-slate-900">Subject Code</th>
+                  <th class="p-2 border-r border-slate-900">Subject Name</th>
+                  <th class="p-2 border-r border-slate-900">Hall</th>
+                  <th class="p-2 text-center">Invigilator Sign</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-300">
+                <tr>
+                  <td class="p-2 border-r border-slate-300 font-mono">28-11-2024</td>
+                  <td class="p-2 border-r border-slate-300">FN (10:00 - 13:00)</td>
+                  <td class="p-2 border-r border-slate-300 font-bold font-mono">21CS501</td>
+                  <td class="p-2 border-r border-slate-300">Theory of Computation & Compiler Design</td>
+                  <td class="p-2 border-r border-slate-300">A-204</td>
+                  <td class="p-2 border-r border-slate-300"></td>
+                </tr>
+                <tr>
+                  <td class="p-2 border-r border-slate-300 font-mono">02-12-2024</td>
+                  <td class="p-2 border-r border-slate-300">FN (10:00 - 13:00)</td>
+                  <td class="p-2 border-r border-slate-300 font-bold font-mono">21CS502</td>
+                  <td class="p-2 border-r border-slate-300">Database Management Systems & Cloud SQL</td>
+                  <td class="p-2 border-r border-slate-300">A-204</td>
+                  <td class="p-2 border-r border-slate-300"></td>
+                </tr>
+                <tr>
+                  <td class="p-2 border-r border-slate-300 font-mono">05-12-2024</td>
+                  <td class="p-2 border-r border-slate-300">FN (10:00 - 13:00)</td>
+                  <td class="p-2 border-r border-slate-300 font-bold font-mono">21AI503</td>
+                  <td class="p-2 border-r border-slate-300">Machine Learning & Deep Learning Fundamentals</td>
+                  <td class="p-2 border-r border-slate-300">A-204</td>
+                  <td class="p-2 border-r border-slate-300"></td>
+                </tr>
+                <tr>
+                  <td class="p-2 border-r border-slate-300 font-mono">09-12-2024</td>
+                  <td class="p-2 border-r border-slate-300">FN (10:00 - 13:00)</td>
+                  <td class="p-2 border-r border-slate-300 font-bold font-mono">21CS504</td>
+                  <td class="p-2 border-r border-slate-300">Computer Networks & Cyber Security</td>
+                  <td class="p-2 border-r border-slate-300">A-204</td>
+                  <td class="p-2 border-r border-slate-300"></td>
+                </tr>
+                <tr>
+                  <td class="p-2 border-r border-slate-300 font-mono">12-12-2024</td>
+                  <td class="p-2 border-r border-slate-300">FN (10:00 - 13:00)</td>
+                  <td class="p-2 border-r border-slate-300 font-bold font-mono">21CS505</td>
+                  <td class="p-2 border-r border-slate-300">Object-Oriented Software Engineering & Agile</td>
+                  <td class="p-2 border-r border-slate-300">A-204</td>
+                  <td class="p-2 border-r border-slate-300"></td>
+                </tr>
+                <tr>
+                  <td class="p-2 border-r border-slate-300 font-mono">16-12-2024</td>
+                  <td class="p-2 border-r border-slate-300">FN (10:00 - 13:00)</td>
+                  <td class="p-2 border-r border-slate-300 font-bold font-mono">21OE501</td>
+                  <td class="p-2 border-r border-slate-300">Renewable Energy Systems & EV Technology</td>
+                  <td class="p-2 border-r border-slate-300">B-102</td>
+                  <td class="p-2 border-r border-slate-300"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Signatures & Barcode -->
+          <div class="flex items-end justify-between pt-8 border-t border-slate-300 text-xs">
+            <div class="text-center">
+              <div class="w-36 h-8 border-b border-slate-900 mb-1 flex items-center justify-center font-serif italic text-blue-900">Arihant S</div>
+              <span class="font-bold">Signature of Candidate</span>
+            </div>
+            
+            <div class="text-center font-mono text-[10px] tracking-widest">
+              ||| | ||||| || |||| ||| ||||||| |||| |<br>
+              KIOT-COE-611221104042-2024
+            </div>
+
+            <div class="text-center">
+              <div class="w-36 h-8 border-b border-slate-900 mb-1 flex items-center justify-center font-serif italic font-bold">Dr. V. Kumar</div>
+              <span class="font-bold">Controller of Examinations (CoE)</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL: KIOT-AI STUDY COMPANION ================= -->
+  <div id="aiTutorModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5">
+    <div class="modal-content-container bg-white dark:bg-slate-900 w-full max-w-2xl max-h-[90vh] rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden">
+      
+      <div class="p-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold">KIOT-AI Academic Tutor</h3>
+            <p class="text-[11px] text-blue-100">24/7 Syllabus Doubts, 2-Mark Question Generator & Viva Prep</p>
+          </div>
+        </div>
+        <button onclick="closeAITutorModal()" class="w-8 h-8 rounded-full hover:bg-white/20 text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Chat History -->
+      <div id="aiChatHistory" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50 dark:bg-slate-950/50 text-xs">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Quick Prompt Chips -->
+      <div class="p-2 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+        <button onclick="sendQuickPrompt('Explain Normalization 1NF to BCNF in simple terms')" class="shrink-0 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 text-[11px] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+          💡 Normalization 1NF-BCNF
+        </button>
+        <button onclick="sendQuickPrompt('Generate 5 high-priority 2-mark questions for TOC')" class="shrink-0 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 text-[11px] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+          📝 2-Marks for TOC
+        </button>
+        <button onclick="sendQuickPrompt('What are the top 3 Zoho technical interview questions for DBMS?')" class="shrink-0 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 text-[11px] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+          💼 Zoho DBMS Questions
+        </button>
+      </div>
+
+      <!-- Chat Input Area -->
+      <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2">
+        <input 
+          type="text" 
+          id="aiChatInput" 
+          placeholder="Ask any question from your syllabus, algorithm doubt, or exam concept..." 
+          class="flex-1 px-4 py-2.5 text-xs bg-slate-100 dark:bg-slate-800 rounded-xl border border-transparent focus:border-blue-500 focus:outline-none dark:text-slate-100"
+          onkeydown="if(event.key==='Enter') sendAIChatMessage()"
+        >
+        <button onclick="sendAIChatMessage()" class="px-4 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition flex items-center gap-1.5">
+          <span>Ask</span>
+          <i class="fa-solid fa-paper-plane text-[10px]"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL: APPLY FOR ON-DUTY (OD) ================= -->
+  <div id="odRequestModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5">
+    <div class="modal-content-container bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-file-signature text-blue-600"></i> Submit On-Duty (OD) Application
+        </h3>
+        <button onclick="closeODRequestModal()" class="w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="odForm" onsubmit="handleODSubmit(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Category of OD</label>
+          <select required class="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+            <option>Inter-College Technical Symposium / Paper Presentation</option>
+            <option>National Hackathon / IDEA Lab Innovation</option>
+            <option>Zonal Sports / Athletic Meet</option>
+            <option>Training & Placement Drive / Off-Campus Interview</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">From Date</label>
+            <input type="date" required value="2024-10-15" class="w-full p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">To Date</label>
+            <input type="date" required value="2024-10-16" class="w-full p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Event & Host Institution Details</label>
+          <input type="text" required placeholder="e.g. Kurukshetra 2024, CEG Anna University, Chennai" class="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Upload Permission Letter / Brochure (PDF/PNG)</label>
+          <input type="file" class="w-full p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeODRequestModal()" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700">Submit to HOD</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Footer (Moodle & KIOT Moove Theme Credits) -->
+  <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-6 px-4 sm:px-8 mt-auto text-xs text-slate-500 dark:text-slate-400">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img src="assets/kiot_logo.png" alt="KIOT Logo" class="h-7 object-contain opacity-80" onerror="this.src='https://kiotlms.com/pluginfile.php/1/theme_moove/logo/1791211168/KIOT_Logo.png';">
+        <span>© 2009 - 2024 Knowledge Institute of Technology (Autonomous). All Rights Reserved.</span>
+      </div>
+      <div class="flex items-center gap-4 text-xs font-medium">
+        <a href="https://kiotlms.com" target="_blank" class="hover:text-blue-600 flex items-center gap-1">
+          <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> kiotlms.com
+        </a>
+        <span>•</span>
+        <a href="https://kiot.ac.in" target="_blank" class="hover:text-blue-600">Official College Site</a>
+        <span>•</span>
+        <span>Moodle 4.3 with Moove Theme</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

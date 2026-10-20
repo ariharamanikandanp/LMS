@@ -1,0 +1,264 @@
+/* 
+ * KIOT LMS - Knowledge Institute of Technology (Autonomous)
+ * Advanced Modern Stylesheet & Theme Controls
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* KIOT Brand Palette */
+  --kiot-navy: #0c2340;
+  --kiot-navy-light: #163660;
+  --kiot-navy-dark: #071526;
+  --kiot-blue: #1e40af;
+  --kiot-blue-light: #3b82f6;
+  --kiot-gold: #f59e0b;
+  --kiot-gold-dark: #d97706;
+  --kiot-gold-light: #fef3c7;
+
+  /* Surfaces */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* Dark Mode Overrides */
+html.dark {
+  --bg-primary: #0b1120;
+  --bg-secondary: #0f172a;
+  --bg-tertiary: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --border-subtle: #1e293b;
+  --border-strong: #334155;
+  --kiot-navy: #1e293b;
+  --kiot-navy-light: #334155;
+  --kiot-navy-dark: #020617;
+}
+
+/* Accessibility High Contrast */
+html.high-contrast {
+  --text-primary: #000000;
+  --text-secondary: #111111;
+  --border-subtle: #000000;
+  --border-strong: #000000;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+html.high-contrast.dark {
+  --text-primary: #ffffff;
+  --text-secondary: #eeeeee;
+  --border-subtle: #ffffff;
+  --border-strong: #ffffff;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+/* Font scale classes */
+html.font-sm { font-size: 14px; }
+html.font-md { font-size: 16px; }
+html.font-lg { font-size: 18px; }
+
+* {
+  box-sizing: border-box;
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Modern Card Hover Effects */
+.course-card {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow;
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 30px -8px rgba(12, 35, 64, 0.15);
+}
+
+.dark .course-card:hover {
+  box-shadow: 0 16px 30px -8px rgba(0, 0, 0, 0.5);
+}
+
+/* Badge Glow */
+.badge-kiot {
+  background: linear-gradient(135deg, rgba(30, 64, 175, 0.1) 0%, rgba(245, 158, 11, 0.15) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #d97706;
+}
+
+.dark .badge-kiot {
+  background: linear-gradient(135deg, rgba(30, 64, 175, 0.2) 0%, rgba(245, 158, 11, 0.2) 100%);
+  color: #fbbf24;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Anti-Cheat Warning Banner */
+.proctoring-banner {
+  background: linear-gradient(90deg, #7f1d1d 0%, #991b1b 100%);
+  border-left: 4px solid #ef4444;
+  animation: pulseSubtle 3s infinite ease-in-out;
+}
+
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.92; }
+}
+
+/* Sidebar Active Indicator */
+.nav-item-active {
+  background: linear-gradient(90deg, rgba(30, 64, 175, 0.12) 0%, rgba(30, 64, 175, 0.03) 100%);
+  border-left: 3px solid #1e40af;
+  color: #1e40af;
+  font-weight: 600;
+}
+
+.dark .nav-item-active {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.05) 100%);
+  border-left: 3px solid #60a5fa;
+  color: #93c5fd;
+}
+
+/* Modal and Drawer Animations */
+.modal-backdrop {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease-out;
+}
+
+.modal-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content-container {
+  transform: scale(0.96) translateY(12px);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out;
+}
+
+.modal-backdrop.active .modal-content-container {
+  transform: scale(1) translateY(0);
+}
+
+/* Drawer Animation */
+.side-drawer {
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.side-drawer.open {
+  transform: translateX(0);
+}
+
+/* Hall Ticket Specific Print Styles */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #hallTicketPrintArea, #hallTicketPrintArea * {
+    visibility: visible;
+  }
+  #hallTicketPrintArea {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Shimmer Loading Skeleton */
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.dark .skeleton {
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Tab Active Indicator */
+.tab-btn.active {
+  color: #1e40af;
+  border-bottom: 2px solid #1e40af;
+  font-weight: 600;
+}
+
+.dark .tab-btn.active {
+  color: #60a5fa;
+  border-bottom: 2px solid #60a5fa;
+}
+
+/* Code Preview */
+pre, code {
+  font-family: var(--font-mono);
+}

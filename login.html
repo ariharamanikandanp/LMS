@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" class="font-md">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log in to the site | KIOT LMS - Knowledge Institute of Technology</title>
+  <link rel="shortcut icon" href="assets/kiot_favicon.png" type="image/png">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            kiot: {
+              navy: '#0c2340',
+              'navy-light': '#163660',
+              'navy-dark': '#071526',
+              blue: '#1e40af',
+              'blue-light': '#3b82f6',
+              gold: '#f59e0b',
+              'gold-dark': '#d97706',
+              'gold-light': '#fef3c7'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col justify-between transition-colors duration-200">
+
+  <!-- ================= TOP SLIM BAR ================= -->
+  <header class="h-16 px-4 sm:px-8 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between shadow-xs">
+    <a href="login.html" class="flex items-center gap-3 group">
+      <img src="assets/kiot_logo.png" alt="KIOT Logo" class="h-10 sm:h-11 object-contain transition-transform group-hover:scale-105" onerror="this.onerror=null; this.src='https://kiotlms.com/pluginfile.php/1/theme_moove/logo/1791211168/KIOT_Logo.png';">
+      <div class="hidden sm:flex flex-col border-l border-slate-200 dark:border-slate-700 pl-3">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-kiot-gold-dark dark:text-kiot-gold">Autonomous Portal</span>
+        <span class="text-sm font-extrabold text-kiot-navy dark:text-blue-400 tracking-tight leading-none">KIOT LMS</span>
+      </div>
+    </a>
+
+    <div class="flex items-center gap-3">
+      <!-- Dark/Light Mode -->
+      <button id="themeToggleBtn" class="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Toggle Theme">
+        <i class="fa-solid fa-moon dark:hidden text-slate-600"></i>
+        <i class="fa-solid fa-sun hidden dark:inline-block text-amber-400"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= MAIN LOGIN CONTAINER ================= -->
+  <main class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+    <div class="w-full max-w-5xl bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[580px]">
+      
+      <!-- LEFT HERO BANNER (KIOT AUTONOMOUS HIGHLIGHTS) -->
+      <div class="lg:col-span-5 bg-gradient-to-br from-kiot-navy via-kiot-navy-light to-blue-900 p-8 text-white flex flex-col justify-between relative overflow-hidden">
+        <!-- Background subtle glow & watermarks -->
+        <div class="absolute -right-12 -bottom-12 w-64 h-64 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -left-12 -top-12 w-48 h-48 bg-amber-500/10 rounded-full blur-xl pointer-events-none"></div>
+
+        <div class="relative z-10 space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-xs font-bold uppercase tracking-widest text-kiot-gold-light">Autonomous Institution</span>
+          </div>
+
+          <h2 class="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
+            Empowering Every KIOTian Since 2009
+          </h2>
+
+          <p class="text-xs text-blue-100/90 leading-relaxed">
+            Welcome to the centralized digital campus for Knowledge Institute of Technology. Access all 18 UG, PG & doctoral courses, autonomous exam materials, and Zoho placement tracks.
+          </p>
+        </div>
+
+        <!-- Institutional Trust Stats -->
+        <div class="relative z-10 py-6 my-auto grid grid-cols-2 gap-3 border-y border-white/10">
+          <div class="p-3 bg-white/10 backdrop-blur-xs rounded-2xl border border-white/10">
+            <div class="text-xl sm:text-2xl font-black text-white font-mono">910+</div>
+            <div class="text-[11px] text-amber-300 font-semibold">Campus Placements</div>
+            <div class="text-[10px] text-blue-200">Zoho, TCS, TechM</div>
+          </div>
+
+          <div class="p-3 bg-white/10 backdrop-blur-xs rounded-2xl border border-white/10">
+            <div class="text-xl sm:text-2xl font-black text-white font-mono">NAAC 'A'</div>
+            <div class="text-[11px] text-emerald-300 font-semibold">Accreditation</div>
+            <div class="text-[10px] text-blue-200">NBA Accredited</div>
+          </div>
+
+          <div class="p-3 bg-white/10 backdrop-blur-xs rounded-2xl border border-white/10">
+            <div class="text-xl sm:text-2xl font-black text-white font-mono">4,520+</div>
+            <div class="text-[11px] text-blue-200 font-semibold">Active KIOTians</div>
+            <div class="text-[10px] text-blue-200">Across 18 Programmes</div>
+          </div>
+
+          <div class="p-3 bg-white/10 backdrop-blur-xs rounded-2xl border border-white/10">
+            <div class="text-xl sm:text-2xl font-black text-white font-mono">IDEA Lab</div>
+            <div class="text-[11px] text-purple-300 font-semibold">AICTE Approved</div>
+            <div class="text-[10px] text-blue-200">IoT & Robotics Center</div>
+          </div>
+        </div>
+
+        <!-- Campus Location Footer -->
+        <div class="relative z-10 text-[11px] text-blue-200/80 space-y-1">
+          <div class="flex items-center gap-1.5 font-medium">
+            <i class="fa-solid fa-location-dot text-amber-400"></i>
+            <span>NH544, Kakapalayam, Salem, Tamil Nadu - 637 504</span>
+          </div>
+          <div>Affiliated to Anna University, Chennai</div>
+        </div>
+      </div>
+
+      <!-- RIGHT LOGIN FORM -->
+      <div class="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between">
+        
+        <div>
+          <!-- Heading -->
+          <div class="mb-6">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-mono font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40 px-2 py-0.5 rounded-md">
+                Moodle Moove SSO
+              </span>
+              <span class="text-xs text-slate-400">Regulations 2021 CBCS</span>
+            </div>
+            <h1 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+              Log in to KIOT LMS
+            </h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Enter your student register number, faculty ID, or campus Google account to access your courses.
+            </p>
+          </div>
+
+          <!-- Main Authentication Form -->
+          <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+            
+            <!-- Username Input -->
+            <div class="space-y-1">
+              <label for="usernameInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                Username / Register Number / Email
+              </label>
+              <div class="relative">
+                <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input 
+                  type="text" 
+                  id="usernameInput" 
+                  required
+                  placeholder="e.g. 611221104042 or user@kiot.ac.in" 
+                  class="w-full pl-10 pr-4 py-2.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:outline-none transition dark:text-slate-100"
+                >
+              </div>
+            </div>
+
+            <!-- Password Input -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label for="passwordInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                  Password
+                </label>
+                <a href="#" onclick="openForgotPasswordModal(event)" class="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline">
+                  Lost password?
+                </a>
+              </div>
+              <div class="relative">
+                <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input 
+                  type="password" 
+                  id="passwordInput" 
+                  required
+                  placeholder="Enter your LMS password" 
+                  class="w-full pl-10 pr-10 py-2.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:outline-none transition dark:text-slate-100"
+                >
+                <button 
+                  type="button" 
+                  id="togglePasswordBtn" 
+                  onclick="togglePasswordVisibility()" 
+                  class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs"
+                >
+                  <i class="fa-regular fa-eye" id="eyeIcon"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember Me & Policy -->
+            <div class="flex items-center justify-between text-xs">
+              <label class="flex items-center gap-2 cursor-pointer text-slate-600 dark:text-slate-400">
+                <input type="checkbox" id="rememberMe" checked class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                <span>Remember username</span>
+              </label>
+
+              <span class="text-[11px] text-slate-400">
+                <i class="fa-solid fa-shield-cat mr-1 text-emerald-500"></i> 256-bit SSL Secure
+              </span>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              id="submitLoginBtn"
+              class="w-full py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2"
+            >
+              <span id="loginBtnText">Log in to KIOT LMS</span>
+              <i class="fa-solid fa-arrow-right text-xs" id="loginBtnIcon"></i>
+              <i class="fa-solid fa-spinner fa-spin text-xs hidden" id="loginBtnSpinner"></i>
+            </button>
+
+          </form>
+
+          <!-- Divider -->
+          <div class="relative my-5 text-center">
+            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200 dark:border-slate-800"></div></div>
+            <span class="relative bg-white dark:bg-slate-900 px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+              Or sign in with
+            </span>
+          </div>
+
+          <!-- Google Workspace Single Sign-On -->
+          <div>
+            <button 
+              type="button" 
+              onclick="handleGoogleLogin()" 
+              class="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-xs transition"
+            >
+              <svg class="w-4 h-4" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+              </svg>
+              <span>Sign in with KIOT Google Account (@kiot.ac.in)</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Helpdesk & Retention Footer -->
+        <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 gap-2">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-headset text-blue-600"></i>
+            <span>LMS Helpline: <strong>+91 427 2433900</strong></span>
+          </div>
+          <div class="flex items-center gap-3">
+            <a href="#" class="hover:underline">Cookies Policy</a>
+            <span>•</span>
+            <a href="#" class="hover:underline">Data Retention</a>
+            <span>•</span>
+            <a href="https://download.moodle.org/mobile" target="_blank" class="hover:underline">Get Mobile App</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= MODAL: FORGOT PASSWORD ================= -->
+  <div id="forgotPasswordModal" class="modal-backdrop fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="modal-content-container bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-key text-amber-500"></i> Reset KIOT LMS Password
+        </h3>
+        <button onclick="closeForgotPasswordModal()" class="w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-500 leading-relaxed">
+        To reset your password, submit your registered 12-digit Anna University Register Number or your KIOT email address. If found in the database, an OTP verification link will be sent.
+      </p>
+
+      <form onsubmit="handleForgotSubmit(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold mb-1 text-slate-700 dark:text-slate-300">Register Number or Campus Email</label>
+          <input type="text" required placeholder="e.g. 611221104042 or arihant@kiot.ac.in" class="w-full p-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-blue-500">
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2 text-xs">
+          <button type="button" onclick="closeForgotPasswordModal()" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700">Send Reset Link</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Footer Credits -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+    © 2009 - 2024 Knowledge Institute of Technology (Autonomous). Powered by Moodle with Moove theme.
+  </footer>
+
+  <!-- Login Logic Script -->
+  <script src="data.js"></script>
+  <script>
+    // Theme Initializer
+    function initTheme() {
+      const savedTheme = localStorage.getItem('kiot_theme');
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+
+      document.getElementById('themeToggleBtn').addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        const isDark = document.documentElement.classList.contains('dark');
+        localStorage.setItem('kiot_theme', isDark ? 'dark' : 'light');
+      });
+    }
+
+    // Toggle Password Visibility
+    function togglePasswordVisibility() {
+      const input = document.getElementById('passwordInput');
+      const eye = document.getElementById('eyeIcon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        eye.className = 'fa-regular fa-eye-slash';
+      } else {
+        input.type = 'password';
+        eye.className = 'fa-regular fa-eye';
+      }
+    }
+
+    // Handle Form Submit
+    function handleLoginSubmit(event) {
+      event.preventDefault();
+      
+      const user = document.getElementById('usernameInput').value.trim();
+      const pass = document.getElementById('passwordInput').value.trim();
+
+      const btn = document.getElementById('submitLoginBtn');
+      const btnText = document.getElementById('loginBtnText');
+      const btnIcon = document.getElementById('loginBtnIcon');
+      const btnSpinner = document.getElementById('loginBtnSpinner');
+
+      btn.disabled = true;
+      btnText.textContent = 'Verifying with KIOT LDAP...';
+      btnIcon.classList.add('hidden');
+      btnSpinner.classList.remove('hidden');
+
+      setTimeout(() => {
+        // Check if faculty or student
+        const isFaculty = user.toLowerCase().includes('fac') || user.toLowerCase().includes('rajasekaran');
+        
+        const sessionUser = isFaculty ? {
+          id: "FAC_CSE_104",
+          name: "Dr. P. Rajasekaran, M.E., Ph.D.",
+          role: "faculty",
+          regNo: "FAC_CSE_104",
+          dept: "Computer Science and Engineering",
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250"
+        } : {
+          id: "STU611221104042",
+          name: "Arihant S",
+          role: "student",
+          regNo: user || "611221104042",
+          dept: "B.E. Computer Science and Engineering",
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250"
+        };
+
+        localStorage.setItem('kiot_auth_user', JSON.stringify(sessionUser));
+        showToast(`Welcome back, ${sessionUser.name}! Loading courses...`, 'success');
+
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 800);
+      }, 900);
+    }
+
+    // Google Login Simulation
+    function handleGoogleLogin() {
+      showToast('Redirecting to Google Workspace (@kiot.ac.in) OAuth...', 'info');
+      setTimeout(() => {
+        const studentUser = {
+          id: "STU611221104042",
+          name: "Arihant S",
+          role: "student",
+          regNo: "611221104042",
+          dept: "B.E. Computer Science and Engineering",
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250"
+        };
+        localStorage.setItem('kiot_auth_user', JSON.stringify(studentUser));
+        window.location.href = 'index.html';
+      }, 1000);
+    }
+
+    // Modal controls
+    function openForgotPasswordModal(e) {
+      if (e) e.preventDefault();
+      document.getElementById('forgotPasswordModal').classList.add('active');
+    }
+
+    function closeForgotPasswordModal() {
+      document.getElementById('forgotPasswordModal').classList.remove('active');
+    }
+
+    function handleForgotSubmit(e) {
+      e.preventDefault();
+      closeForgotPasswordModal();
+      showToast('Password reset link sent to your campus email address.', 'success');
+    }
+
+    // Toast Utility
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      const bgClass = type === 'success' ? 'bg-emerald-600 text-white' : type === 'error' ? 'bg-red-600 text-white' : 'bg-slate-900 text-white dark:bg-white dark:text-slate-900';
+      
+      toast.className = `p-3.5 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2.5 transform transition-all duration-300 translate-y-3 opacity-0 pointer-events-auto ${bgClass}`;
+      toast.innerHTML = `
+        <i class="fa-solid ${type === 'success' ? 'fa-circle-check text-emerald-200' : 'fa-circle-info text-blue-400'}"></i>
+        <span>${message}</span>
+      `;
+
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-3', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-3');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    document.addEventListener('DOMContentLoaded', initTheme);
+  </script>
+</body>
+</html>
